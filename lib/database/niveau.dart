@@ -33,3 +33,24 @@ Future<void> insertNiveau(Niveau niveau) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Niveau?> getNiveauById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'niveau',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Niveau(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+  );
+}

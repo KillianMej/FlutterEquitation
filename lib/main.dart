@@ -63,10 +63,13 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  Future<String>? _futureUsers;
+
   @override
   void initState() {
     super.initState();
     _insertInitialUser();
+    _futureUsers = _getUsers(11);
   }
 
   Future<void> _insertInitialUser() async {
@@ -83,14 +86,33 @@ class _MainAppState extends State<MainApp> {
     await insertUtilisateur(jaque);
   }
 
+  Future<String> _getUsers(id) async {
+    final user = await getUtilisateurById(id);
+    if (user != null) {
+    return user.toString();
+  } else {
+    return 'Utilisateur non trouvé';
+  }
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: FutureBuilder<String>(
+            future: _futureUsers,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting){
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return Text('User: ${snapshot.data}');
+              }
+            }
+          ),
         ),
       ),
     );

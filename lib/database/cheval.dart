@@ -56,3 +56,31 @@ Future<void> insertCheval(Cheval cheval) async{
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Cheval?> getChevalById(int id) async{
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'cheval',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Cheval(
+    id: maps.first['id'],
+    photo: maps.first['photo'],
+    nom: maps.first['nom'],
+    age: maps.first['age'],
+    robe: maps.first['robe'],
+    race: maps.first['race'],
+    sexe: maps.first['sexe'] == 'M' ? Sexe.M : Sexe.F,
+    specialiteId: maps.first['specialite_id'],
+    utilisateurId: maps.first['utilisateur_id'],
+  );
+}

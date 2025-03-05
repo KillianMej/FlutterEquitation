@@ -54,3 +54,31 @@ Future<void> insertUtilisateur(Utilisateur utilisateur) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Utilisateur?> getUtilisateurById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'utilisateur',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Utilisateur(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+    email: maps.first['email'],
+    mot_de_passe: maps.first['mot_de_passe'],
+    numero: maps.first['numero'],
+    age: maps.first['age'],
+    ffe: maps.first['ffe'],
+    photo: maps.first['photo'],
+    gerant: maps.first['gerant'] == 1,
+  );
+}

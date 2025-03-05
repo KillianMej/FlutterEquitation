@@ -40,3 +40,26 @@ Future<void> insertSoiree(Soiree soiree) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Soiree?> getSoireeById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'soiree',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Soiree(
+    id: maps.first['id'],
+    themeId: maps.first['theme_id'],
+    photo: maps.first['photo'],
+    valide: maps.first['valide'],
+  );
+}

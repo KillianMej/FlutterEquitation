@@ -33,3 +33,24 @@ Future<void> insertTheme(Theme theme) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Theme?> getThemeById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'theme',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Theme(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+  );
+}

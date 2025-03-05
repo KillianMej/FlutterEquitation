@@ -47,3 +47,28 @@ Future<void> insertCours(Cours cours) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Cours?> getCoursById(int id) async{
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'cours',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Cours(
+    id: maps.first['id'],
+    terrain: Terrain.values[maps.first['terrain']],
+    date: DateTime.parse(maps.first['date']),
+    duree: maps.first['duree'],
+    specialiteId: maps.first['specialite_id'],
+    valide: maps.first['valide'],
+  );
+}

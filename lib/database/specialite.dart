@@ -33,3 +33,24 @@ Future<void> insertSpecialite(Specialite specialite) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Specialite?> getSpecialiteById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'specialites',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Specialite(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+  );
+}

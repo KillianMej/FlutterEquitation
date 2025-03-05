@@ -36,3 +36,25 @@ Future<void> insertDp(Dp dp) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Dp?> getDpById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'dp',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Dp(
+    id: maps.first['id'],
+    chevalId: maps.first['cheval_id'],
+    utilisateurId: maps.first['utilisateur_id'],
+  );
+}

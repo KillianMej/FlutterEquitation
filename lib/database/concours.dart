@@ -45,3 +45,29 @@ Future<void> insertConcours(Concours concours) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Concours?> getConcoursById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'concours',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Concours(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+    adresse: maps.first['adresse'],
+    photo: maps.first['photo'],
+    date: DateTime.parse(maps.first['date']),
+    niveauId: maps.first['niveau_id'],
+  );
+
+}
