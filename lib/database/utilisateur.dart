@@ -9,6 +9,7 @@ class Utilisateur {
   final String numero;
   final int age;
   final String ffe;
+  final String? photo;
   final bool gerant;
 
   const Utilisateur({
@@ -19,6 +20,7 @@ class Utilisateur {
     required this.numero,
     required this.age,
     required this.ffe,
+    this.photo,
     required this.gerant
   });
 
@@ -30,13 +32,14 @@ class Utilisateur {
       "numero": numero,
       "age": age,
       "ffe": ffe,
+      "photo": photo,
       "gerant": gerant ? 1 : 0
     };
   }
 
   @override
   String toString() {
-    return 'Utilisateur{id: $id, nom: $nom, email: $email, mot_de_passe: $mot_de_passe, numero: $numero, age: $age, ffe: $ffe, gerant: $gerant}';
+    return 'Utilisateur{id: $id, nom: $nom, email: $email, mot_de_passe: $mot_de_passe, numero: $numero, age: $age, ffe: $ffe,photo: $photo, gerant: $gerant}';
   }
 }
 
