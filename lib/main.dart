@@ -6,6 +6,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 
+import 'pages/nouveau_Cours.dart';
+
 Future<void> initDb() async {
   sqfliteFfiInit();
   // Change the default factory to FFI
@@ -54,7 +56,9 @@ void main() async {
 
   await initDb();
 
-  runApp(MainApp());
+  runApp(MaterialApp(
+    home: NouveauCours(),
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -88,11 +92,11 @@ class _MainAppState extends State<MainApp> {
 
   Future<String> _getUsers(id) async {
     final user = await getUtilisateurById(id);
-    if (user != null) {
-    return user.toString();
-  } else {
-    return 'Utilisateur non trouvé';
-  }
+      if (user != null) {
+      return user.toString();
+    } else {
+      return 'Utilisateur non trouvé';
+    }
   }
 
 
