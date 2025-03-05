@@ -9,6 +9,7 @@ class Utilisateur {
   final String numero;
   final int age;
   final String ffe;
+  final String? photo;
   final bool gerant;
 
   const Utilisateur({
@@ -19,6 +20,7 @@ class Utilisateur {
     required this.numero,
     required this.age,
     required this.ffe,
+    this.photo,
     required this.gerant
   });
 
@@ -30,13 +32,14 @@ class Utilisateur {
       "numero": numero,
       "age": age,
       "ffe": ffe,
+      "photo": photo,
       "gerant": gerant ? 1 : 0
     };
   }
 
   @override
   String toString() {
-    return 'Utilisateur{id: $id, nom: $nom, email: $email, mot_de_passe: $mot_de_passe, numero: $numero, age: $age, ffe: $ffe, gerant: $gerant}';
+    return 'Utilisateur{id: $id, nom: $nom, email: $email, mot_de_passe: $mot_de_passe, numero: $numero, age: $age, ffe: $ffe,photo: $photo, gerant: $gerant}';
   }
 }
 
@@ -49,5 +52,33 @@ Future<void> insertUtilisateur(Utilisateur utilisateur) async {
     'utilisateur',
     utilisateur.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
+  );
+}
+
+Future<Utilisateur?> getUtilisateurById(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'utilisateur',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+
+  if (maps.isEmpty) {
+    return null;
+  }
+
+  return Utilisateur(
+    id: maps.first['id'],
+    nom: maps.first['nom'],
+    email: maps.first['email'],
+    mot_de_passe: maps.first['mot_de_passe'],
+    numero: maps.first['numero'],
+    age: maps.first['age'],
+    ffe: maps.first['ffe'],
+    photo: maps.first['photo'],
+    gerant: maps.first['gerant'] == 1,
   );
 }

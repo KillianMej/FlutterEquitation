@@ -7,7 +7,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 import 'pages/register.dart';
 
-
+// Initialisation de la base de données
 Future<void> initDb() async {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
@@ -17,35 +17,32 @@ Future<void> initDb() async {
 
   final database = await openDatabase(
     dbPath,
-    version: 1,
     onCreate: (db, version) async {
-      print("🛠 Création de la table utilisateur...");
       await db.execute(
-        'CREATE TABLE utilisateur('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'nom TEXT NOT NULL, '
-            'email TEXT UNIQUE NOT NULL, '
-            'mot_de_passe TEXT NOT NULL, '
-            'numero TEXT, '
-            'age INTEGER, '
-            'ffe TEXT, '
-            'gerant BOOLEAN'
-            ')',
+        'CREATE TABLE utilisateur(id INTEGER PRIMARY KEY AUTOINCREMENT, nom VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, mot_de_passe VARCHAR(255) NOT NULL, numero VARCHAR(20), age INT, ffe VARCHAR(255), photo VARCHAR(255), gerant BOOLEAN)',
       );
-      print("✅ Table utilisateur créée !");
+      // Création des autres tables si nécessaire
+      await db.execute(
+        'CREATE TABLE cheval(id INTEGER PRIMARY KEY AUTOINCREMENT,photo VARCHAR(255),nom VARCHAR(100) NOT NULL,age INT,robe VARCHAR(50),race VARCHAR(100),sexe VARCHAR(1) NOT NULL,specialite_id INT,utilisateur_id INT)',
+      );
+      // Autres créations de tables...
+
     },
+    version: 1,
   );
 
   print("🚀 Base de données prête !");
 }
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initDb();
 
-  runApp(MainApp());
+  runApp(
+    MaterialApp(
+      home: MainApp(),  // MaterialApp enveloppe toute l'application
+    ),
+  );
 }
 
 class MainApp extends StatefulWidget {
@@ -54,12 +51,16 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  Future<String>? _futureUsers;
+
   @override
   void initState() {
     super.initState();
     _insertInitialUser();
+    _futureUsers = _getUsers(11);
   }
 
+  // Insertion d'un utilisateur initial
   Future<void> _insertInitialUser() async {
     final jaque = Utilisateur(
       nom: "Jaque",
@@ -74,11 +75,52 @@ class _MainAppState extends State<MainApp> {
     await insertUtilisateur(jaque);
   }
 
+  // Récupération d'un utilisateur par ID
+  Future<String> _getUsers(int id) async {
+    final user = await getUtilisateurById(id);
+    if (user != null) {
+      return user.toString();
+    } else {
+      return 'Utilisateur non trouvé';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegisterPage(), // Définir directement RegisterPage comme écran d'accueil
+    return Scaffold(
+      appBar: AppBar(title: const Text("Accueil")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // FutureBuilder pour afficher les données récupérées
+            FutureBuilder<String>(
+              future: _futureUsers,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text('User: ${snapshot.data}');
+                }
+              },
+            ),
+            SizedBox(height: 20),
+            // Bouton pour rediriger vers la page Register
+            ElevatedButton(
+              onPressed: () {
+                // Naviguer vers la page Register
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                );
+              },
+              child: Text("Go to Register"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
