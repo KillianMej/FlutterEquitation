@@ -5,22 +5,40 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
+import 'pages/register.dart';
+
 
 Future<void> initDb() async {
   sqfliteFfiInit();
-  // Change the default factory to FFI
   databaseFactory = databaseFactoryFfi;
 
+  final dbPath = join(await getDatabasesPath(), 'database.db');
+  print("📂 La base de données sera créée à : $dbPath");
+
   final database = await openDatabase(
-    join(await getDatabasesPath(), 'database.db'),
-    onCreate: (db, version) {
-      return db.execute(
-        'CREATE TABLE utilisateur(id INTEGER PRIMARY KEY AUTOINCREMENT, nom VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, mot_de_passe VARCHAR(255) NOT NULL, numero VARCHAR(20), age INT, ffe VARCHAR(255), gerant BOOLEAN)',
-      );
-    },
+    dbPath,
     version: 1,
+    onCreate: (db, version) async {
+      print("🛠 Création de la table utilisateur...");
+      await db.execute(
+        'CREATE TABLE utilisateur('
+            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+            'nom TEXT NOT NULL, '
+            'email TEXT UNIQUE NOT NULL, '
+            'mot_de_passe TEXT NOT NULL, '
+            'numero TEXT, '
+            'age INTEGER, '
+            'ffe TEXT, '
+            'gerant BOOLEAN'
+            ')',
+      );
+      print("✅ Table utilisateur créée !");
+    },
   );
+
+  print("🚀 Base de données prête !");
 }
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,15 +75,10 @@ class _MainAppState extends State<MainApp> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      home: RegisterPage(), // Définir directement RegisterPage comme écran d'accueil
     );
   }
 }
