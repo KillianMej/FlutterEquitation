@@ -7,7 +7,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 import 'pages/register.dart';
 
-// Initialisation de la base de données
+import 'pages/nouveau_Cours.dart';
+
 Future<void> initDb() async {
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
@@ -84,7 +85,7 @@ class _MainAppState extends State<MainApp> {
       return 'Utilisateur non trouvé';
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
