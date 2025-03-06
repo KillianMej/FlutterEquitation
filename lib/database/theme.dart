@@ -54,3 +54,18 @@ Future<Theme?> getThemeById(int id) async {
     nom: maps.first['nom'],
   );
 }
+
+Future<List<Theme>> getThemes() async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query('theme');
+
+  return List.generate(maps.length, (i) {
+    return Theme(
+      id: maps[i]['id'],
+      nom: maps[i]['nom'],
+    );
+  });
+}

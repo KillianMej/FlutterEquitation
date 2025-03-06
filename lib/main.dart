@@ -6,8 +6,10 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 import 'pages/register.dart';
+import 'pages/nouveau_Cours.dart';
+import 'pages/nouvelle_soiree.dart';
+
 import 'pages/home.dart';
-import 'pages/nouveau_Cours.dart';  // Importer si vous avez une page pour l'emploi du temps
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -41,7 +43,7 @@ Future<void> initDb() async {
           'CREATE TABLE participant (id INTEGER PRIMARY KEY AUTOINCREMENT,cours_id INT,concours_id INT,soiree_id INT,utilisateur_id INT,commentaire TEXT)'
       );
       await db.execute(
-          'CREATE TABLE soiree (id INTEGER PRIMARY KEY AUTOINCREMENT,theme_id INT,photo VARCHAR(255))'
+        'CREATE TABLE soiree (id INTEGER PRIMARY KEY AUTOINCREMENT,theme_id INT, date DATETIME ,photo VARCHAR(255), valide INTEGER NOT NULL)'
       );
       await db.execute(
           'CREATE TABLE theme (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
