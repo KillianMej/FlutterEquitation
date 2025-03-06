@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'register.dart'; // Importer la page de profil qui est pour l'instant RegisterPage
+import 'Profile.dart';
 import 'nouveau_Cours.dart'; // Importer la page d'emploi du temps si elle existe
 
 class HomePage extends StatelessWidget {
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
               // Naviguer vers la page de profil (pour l'instant RegisterPage)
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RegisterPage()),
+                MaterialPageRoute(builder: (context) => ProfilePage()),
               );
             },
           ),
