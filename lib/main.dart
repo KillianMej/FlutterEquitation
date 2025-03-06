@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/pages/loginpage.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 import 'pages/register.dart';
-
 import 'pages/nouveau_Cours.dart';
 import 'pages/nouvelle_soiree.dart';
+
+import 'pages/home.dart';
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -27,28 +28,28 @@ Future<void> initDb() async {
         'CREATE TABLE cheval(id INTEGER PRIMARY KEY AUTOINCREMENT,photo VARCHAR(255),nom VARCHAR(100) NOT NULL,age INT,robe VARCHAR(50),race VARCHAR(100),sexe VARCHAR(1) NOT NULL,specialite_id INT,utilisateur_id INT)',
       );
       await db.execute(
-        'CREATE TABLE specialites (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
+          'CREATE TABLE specialites (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
       );
       await db.execute(
-        'CREATE TABLE cours (id INTEGER PRIMARY KEY AUTOINCREMENT,terrain VARCHAR(8),date DATETIME NOT NULL,duree INT,specialite_id INT,valide INT)'
+          'CREATE TABLE cours (id INTEGER PRIMARY KEY AUTOINCREMENT,terrain VARCHAR(8),date DATETIME NOT NULL,duree INT,specialite_id INT,valide INT)'
       );
       await db.execute(
-        'CREATE TABLE concours (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL,adresse VARCHAR(255),photo VARCHAR(255),date DATETIME NOT NULL,niveau_id INT)'
+          'CREATE TABLE concours (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL,adresse VARCHAR(255),photo VARCHAR(255),date DATETIME NOT NULL,niveau_id INT)'
       );
       await db.execute(
-        'CREATE TABLE niveau (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
+          'CREATE TABLE niveau (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
       );
       await db.execute(
-        'CREATE TABLE participant (id INTEGER PRIMARY KEY AUTOINCREMENT,cours_id INT,concours_id INT,soiree_id INT,utilisateur_id INT,commentaire TEXT)'
+          'CREATE TABLE participant (id INTEGER PRIMARY KEY AUTOINCREMENT,cours_id INT,concours_id INT,soiree_id INT,utilisateur_id INT,commentaire TEXT)'
       );
       await db.execute(
         'CREATE TABLE soiree (id INTEGER PRIMARY KEY AUTOINCREMENT,theme_id INT, date DATETIME ,photo VARCHAR(255), valide INTEGER NOT NULL)'
       );
       await db.execute(
-        'CREATE TABLE theme (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
+          'CREATE TABLE theme (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
       );
       await db.execute(
-        'CREATE TABLE dp (id INTEGER PRIMARY KEY AUTOINCREMENT,cheval_id INT,utilisateur_id INT);'
+          'CREATE TABLE dp (id INTEGER PRIMARY KEY AUTOINCREMENT,cheval_id INT,utilisateur_id INT);'
       );
     },
     version: 1,
@@ -62,7 +63,7 @@ void main() async {
 
   runApp(
     MaterialApp(
-      home: MainApp(),  // MaterialApp enveloppe toute l'application
+      home: MainApp(),
     ),
   );
 }
@@ -82,7 +83,6 @@ class _MainAppState extends State<MainApp> {
     _futureUsers = _getUsers(11);
   }
 
-  // Insertion d'un utilisateur initial
   Future<void> _insertInitialUser() async {
     final jaque = Utilisateur(
       nom: "Jaque",
@@ -97,7 +97,6 @@ class _MainAppState extends State<MainApp> {
     await insertUtilisateur(jaque);
   }
 
-  // Récupération d'un utilisateur par ID
   Future<String> _getUsers(int id) async {
     final user = await getUtilisateurById(id);
     if (user != null) {
@@ -106,52 +105,9 @@ class _MainAppState extends State<MainApp> {
       return 'Utilisateur non trouvé';
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Accueil")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // FutureBuilder pour afficher les données récupérées
-            FutureBuilder<String>(
-              future: _futureUsers,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Text('User: ${snapshot.data}');
-                }
-              },
-            ),
-            // Bouton pour rediriger vers la page Register
-            ElevatedButton(
-              onPressed: () {
-                // Naviguer vers la page Register
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-              },
-              child: Text("Go to Register"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Naviguer vers la page Register
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NouvelleSoiree()),
-                );
-              },
-              child: Text("Go to Soiree"),
-            ),
-          ],
-        ),
-      ),
-    );
+    return LoginPage(); // Redirection immédiate vers HomePage
   }
 }

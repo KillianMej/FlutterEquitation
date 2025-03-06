@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'home.dart';
+import 'LoginPage.dart';
 
 import '../database/utilisateur.dart'; // Assurez-vous que le chemin est correct
 
@@ -34,12 +36,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[50], // Fond bleu clair
-      appBar: AppBar(
-        title: const Text("Inscription"),
-        foregroundColor: Colors.white, // Titre en blanc
-        backgroundColor: Colors.blueAccent,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -148,6 +144,25 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), // Texte en blanc
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Vous avez un compte ? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginPage()),
+                            );
+                          },
+                          child: const Text(
+                            "Se connecter",
+                            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
