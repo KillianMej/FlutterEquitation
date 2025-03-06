@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'database/utilisateur.dart';
 import 'pages/register.dart';
+import 'pages/home.dart';
 import 'pages/nouveau_Cours.dart';  // Importer si vous avez une page pour l'emploi du temps
 
 Future<void> initDb() async {
@@ -174,5 +175,4 @@ class _MainAppState extends State<MainApp> {
         ),
       ),
     );
-  }
 }
