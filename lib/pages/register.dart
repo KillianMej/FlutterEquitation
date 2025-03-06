@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'home.dart';
 
 import '../database/utilisateur.dart'; // Assurez-vous que le chemin est correct
 
@@ -36,9 +37,36 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50], // Fond bleu clair
       appBar: AppBar(
-        title: const Text("Inscription"),
+        title: const Text("Profil"),
         foregroundColor: Colors.white, // Titre en blanc
         backgroundColor: Colors.blueAccent,
+        actions: [
+          // Icônes dans l'AppBar
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              // Action pour rediriger vers la page d'accueil
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            onPressed: () {
+              // Naviguer vers la page emploi du temps
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Emploi du temps")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_add),
+            onPressed: () {
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
