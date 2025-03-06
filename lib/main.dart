@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/pages/loginpage.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -105,6 +106,73 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return HomePage(); // Redirection immédiate vers HomePage
-  }
+    return Scaffold(
+      backgroundColor: Colors.blueGrey[50], // Fond bleu clair
+      appBar: AppBar(
+        title: const Text("Page d'accueil"),
+        foregroundColor: Colors.white, // Titre en blanc
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          // Icônes dans l'AppBar
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              // Action pour rediriger vers la page d'accueil
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Accueil")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            onPressed: () {
+              // Naviguer vers la page emploi du temps
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Emploi du temps")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_add),
+            onPressed: () {
+              // Naviguer vers la page d'inscription (RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RegisterPage()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FutureBuilder<String>(
+              future: _futureUsers,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text('User: ${snapshot.data}');
+                }
+              },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Naviguer vers la page Register
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+              child: Text("Go to Register"),
+            ),
+          ],
+        ),
+      ),
+    );
 }
