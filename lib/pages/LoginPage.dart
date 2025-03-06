@@ -4,6 +4,8 @@ import 'package:path/path.dart';
 import '../database/utilisateur.dart';
 import 'Profile.dart';
 import 'register.dart'; // Import de la page d'inscription
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,6 +44,18 @@ class _LoginPageState extends State<LoginPage> {
     return utilisateurs.isNotEmpty;
   }
 
+  Future<void> _saveUserInfo(Map<String, dynamic> userData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("id", userData["id"]);
+    await prefs.setString("username", userData["username"] ?? ""); // Si null, stocke ""
+    await prefs.setString("email", userData["email"] ?? ""); // Si null, stocke ""
+    await prefs.setString("numero", userData["numero"] ?? ""); // Si null, stocke ""
+    await prefs.setInt("age", userData["age"] ?? 0); // Si null, stocke 0
+    await prefs.setString("ffe", userData["ffe"] ?? ""); // Si null, stocke ""
+  }
+
+
+// Méthode de connexion mise à jour
   void _login(BuildContext context) async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
@@ -51,19 +65,21 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    bool isValid = await _checkLogin(username, password);
+    final List<Map<String, dynamic>> utilisateurs = await _database!.query(
+      'utilisateur',
+      where: "email = ? AND mot_de_passe = ?",
+      whereArgs: [username, password],
+    );
 
-    if (isValid) {
-      print("Connexion réussie !");
-      _showMessage(context, "Connexion réussie !");
-
-      // Rediriger vers ProfilePage en passant le nom d'utilisateur
+    if (utilisateurs.isNotEmpty) {
+      // Enregistrer les infos utilisateur
+      await _saveUserInfo(utilisateurs.first);
+      // Aller à la page d'accueil
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ProfilePage()),
       );
     } else {
-      print("Nom d'utilisateur ou mot de passe incorrect");
       _showMessage(context, "Nom d'utilisateur ou mot de passe incorrect");
     }
   }
