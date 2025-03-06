@@ -8,6 +8,7 @@ import 'database/utilisateur.dart';
 import 'pages/register.dart';
 
 import 'pages/nouveau_Cours.dart';
+import 'pages/nouvelle_soiree.dart';
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -41,7 +42,7 @@ Future<void> initDb() async {
         'CREATE TABLE participant (id INTEGER PRIMARY KEY AUTOINCREMENT,cours_id INT,concours_id INT,soiree_id INT,utilisateur_id INT,commentaire TEXT)'
       );
       await db.execute(
-        'CREATE TABLE soiree (id INTEGER PRIMARY KEY AUTOINCREMENT,theme_id INT,photo VARCHAR(255))'
+        'CREATE TABLE soiree (id INTEGER PRIMARY KEY AUTOINCREMENT,theme_id INT, date DATETIME ,photo VARCHAR(255), valide INTEGER NOT NULL)'
       );
       await db.execute(
         'CREATE TABLE theme (id INTEGER PRIMARY KEY AUTOINCREMENT,nom VARCHAR(100) NOT NULL);'
@@ -127,7 +128,6 @@ class _MainAppState extends State<MainApp> {
                 }
               },
             ),
-            SizedBox(height: 20),
             // Bouton pour rediriger vers la page Register
             ElevatedButton(
               onPressed: () {
@@ -138,6 +138,16 @@ class _MainAppState extends State<MainApp> {
                 );
               },
               child: Text("Go to Register"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Naviguer vers la page Register
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NouvelleSoiree()),
+                );
+              },
+              child: Text("Go to Soiree"),
             ),
           ],
         ),
