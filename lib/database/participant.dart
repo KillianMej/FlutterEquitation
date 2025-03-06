@@ -19,14 +19,15 @@ class Participant {
   }); 
 
   Map<String, Object?> toMap() {
-    return {
-      "cours_id": coursId,
-      "concours_id": concoursId,
-      "soiree_id": soireeId,
-      "utilisateur_id": utilisateurId,
-      "commentaire": commentaire,
-    };
-  }
+  return {
+    "id": id,
+    "cours_id": coursId,
+    "concours_id": concoursId,
+    "soiree_id": soireeId,
+    "utilisateur_id": utilisateurId,
+    "commentaire": commentaire,
+  };
+}
 
   @override
   String toString() {
@@ -34,17 +35,18 @@ class Participant {
   }
 }
 
-Future<void> insertParticipant(Participant participant) async {
+Future<int> insertParticipant(Participant participant) async {
   final database = await openDatabase(
     join(await getDatabasesPath(), 'database.db'),
   );
 
-  await database.insert(
+  return await database.insert(
     'participant',
     participant.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
 
 Future<Participant?> getParticipantById(int id) async{
   final database = await openDatabase(

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+<<<<<<< Updated upstream
 import 'package:flutter_app/pages/loginpage.dart';
+=======
+import 'package:flutter_app/database/concours.dart';
+>>>>>>> Stashed changes
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -10,6 +14,11 @@ import 'pages/nouveau_Cours.dart';
 import 'pages/nouvelle_soiree.dart';
 
 import 'pages/home.dart';
+<<<<<<< Updated upstream
+=======
+import 'pages/nouveau_Cours.dart'; // Assurez-vous d'importer la page NouveauConcours
+import 'pages/concours.dart'; // Si vous en avez besoin également
+>>>>>>> Stashed changes
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -109,5 +118,29 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return LoginPage(); // Redirection immédiate vers HomePage
+  }
+}
+
+// Page d'accueil avec bouton de navigation vers NouveauConcours
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Page d\'accueil'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Naviguer vers la page NouveauConcours
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NouveauConcours()),
+            );
+          },
+          child: Text('Créer un Concours'),
+        ),
+      ),
+    );
   }
 }
