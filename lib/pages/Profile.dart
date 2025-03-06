@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginPage.dart';
 import 'package:sqflite/sqflite.dart';
@@ -126,26 +127,42 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
-        title: const Text("Profil"),
+        title: const Text("Accueil"),
+        foregroundColor: Colors.white, // Titre en blanc
         backgroundColor: Colors.blueAccent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            onPressed: () {
+              // Naviguer vers la page emploi du temps
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Emploi du temps")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Column(
-                children: [
-                  const Icon(Icons.person, size: 100, color: Colors.blueAccent),
-                  const SizedBox(height: 10),
-                  Text(
-                    username,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
             _buildEditableField("Numéro de téléphone", Icons.phone, numero, _phoneController, () {
               setState(() => isEditingPhone = true);
