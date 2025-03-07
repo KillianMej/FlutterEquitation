@@ -107,7 +107,6 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
   // Méthode pour construire l'onglet des cours
   Widget _buildCoursTab() {
     return FutureBuilder<List<Cours>>(
@@ -254,3 +253,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+

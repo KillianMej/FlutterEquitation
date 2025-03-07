@@ -57,8 +57,6 @@ class _NouveauConcoursState extends State<NouveauConcours> {
     if (picked != null && picked != _selectedDate) setState(() => _selectedDate = picked);
   }
 
-
-
     @override
     Widget build(BuildContext context) {
       return MaterialApp(
