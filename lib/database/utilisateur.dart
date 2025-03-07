@@ -82,3 +82,26 @@ Future<Utilisateur?> getUtilisateurById(int id) async {
     gerant: maps.first['gerant'] == 1,
   );
 }
+
+Future<List<Utilisateur>> getUtilisateurs() async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query('utilisateur');
+
+  // Convertir les résultats de la requête en une liste d'objets Utilisateur
+  return List.generate(maps.length, (i) {
+    return Utilisateur(
+      id: maps[i]['id'],
+      nom: maps[i]['nom'],
+      email: maps[i]['email'],
+      mot_de_passe: maps[i]['mot_de_passe'],
+      numero: maps[i]['numero'],
+      age: maps[i]['age'],
+      ffe: maps[i]['ffe'],
+      photo: maps[i]['photo'],
+      gerant: maps[i]['gerant'] == 1,
+    );
+  });
+}
