@@ -69,5 +69,26 @@ Future<Concours?> getConcoursById(int id) async {
     date: DateTime.parse(maps.first['date']),
     niveauId: maps.first['niveau_id'],
   );
-
 }
+
+  Future<List<Concours>> getConcours() async {
+    final database = await openDatabase(
+      join(await getDatabasesPath(), 'database.db'),
+    );
+
+    final List<Map<String, dynamic>> maps = await database.query('concours');
+
+    return List.generate(maps.length, (i) {
+      return Concours(
+        id: maps[i]['id'],
+        nom: maps[i]['nom'],
+        adresse: maps[i]['adresse'],
+        photo: maps[i]['photo'],
+        date: DateTime.parse(maps[i]['date']),
+        niveauId: maps[i]['niveau_id'],
+      );
+    });
+  }
+
+
+

@@ -66,9 +66,35 @@ Future<Cours?> getCoursById(int id) async{
   return Cours(
     id: maps.first['id'],
     terrain: Terrain.values[maps.first['terrain']],
-    date: DateTime.parse(maps.first['date']),
+    date: maps.first['date'] is int
+        ? DateTime.fromMillisecondsSinceEpoch(maps.first['date'])
+        : DateTime.parse(maps.first['date'].toString()),
     duree: maps.first['duree'],
     specialiteId: maps.first['specialite_id'],
     valide: maps.first['valide'],
   );
 }
+
+Future<List<Cours>> getCours() async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query('cours');
+
+  // Convertir les résultats de la requête en une liste d'objets Cours
+  return List.generate(maps.length, (i) {
+    return Cours(
+      id: maps[i]['id'],
+      terrain: Terrain.values[int.parse(maps[i]['terrain'].toString())],
+      date: maps[i]['date'] is int
+          ? DateTime.fromMillisecondsSinceEpoch(maps[i]['date'])  // Si c'est un timestamp (int)
+          : DateTime.parse(maps[i]['date'].toString()),           // Si c'est une String
+      duree: maps[i]['duree'],
+      specialiteId: maps[i]['specialite_id'],
+      valide: maps[i]['valide'],
+    );
+  });
+}
+
+
