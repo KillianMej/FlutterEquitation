@@ -125,14 +125,6 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: _inputDecoration("Mot de passe", Icons.lock),
                     ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {}, // Ajoutez la logique de mot de passe oublié ici
-                        child: const Text("Mot de passe oublié ?", style: TextStyle(color: Colors.blue)),
-                      ),
-                    ),
                     const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,

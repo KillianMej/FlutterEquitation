@@ -57,134 +57,264 @@ class _NouveauConcoursState extends State<NouveauConcours> {
     if (picked != null && picked != _selectedDate) setState(() => _selectedDate = picked);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-appBar: AppBar(
-        title: const Text("Accueil"),
-        foregroundColor: Colors.white, // Titre en blanc
-        backgroundColor: Colors.blueAccent,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.book),
-            onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NouveauCours()),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.music_note),
-            onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NouvelleSoiree()),
-              );
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.star),
-            onPressed: () {
-              // Naviguer vers la page emploi du temps
-              
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChevalPage()),
-              );
-            },
-          ),
-
-
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
-            },
-          ),
-        ],
-      ),      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _concoursFormKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Nom du Concours', border: OutlineInputBorder()),
-                onChanged: (value) => _nomConcours = value,
-                validator: (value) => value!.isEmpty ? 'Le nom du concours est requis' : null,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Adresse', border: OutlineInputBorder()),
-                onChanged: (value) => _adresseConcours = value,
-                validator: (value) => value!.isEmpty ? 'L\'adresse est requise' : null,
-              ),
-              ElevatedButton(
-                onPressed: () => _selectDate(context),
-                child: Text(_selectedDate == null ? 'Sélectionner une date' : 'Date sélectionnée: ${_selectedDate!.toLocal()}'),
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedNiveau,
-                items: niveaux.map((niveau) => DropdownMenuItem(value: niveau, child: Text(niveau))).toList(),
-                onChanged: (value) => setState(() => _selectedNiveau = value),
-                decoration: InputDecoration(labelText: 'Sélectionner le niveau', border: OutlineInputBorder()),
-                validator: (value) => value == null ? 'Le niveau est requis' : null,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Nom du Participant', border: OutlineInputBorder()),
-                onChanged: (value) => _participant = value,
-              ),
-              ElevatedButton(
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text("Concours"),
+            foregroundColor: Colors.white, // Titre en blanc
+            backgroundColor: Colors.blueAccent,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.home),
                 onPressed: () {
-                  if (_participant != null && _participant!.isNotEmpty) {
-                    setState(() {
-                      participants.add(_participant!);
-                      _participant = '';
-                    });
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 },
-                child: Text('Ajouter Participant'),
               ),
-              ...participants.map((participant) => ListTile(title: Text(participant))),
-              ElevatedButton(
+              IconButton(
+                icon: const Icon(Icons.book),
                 onPressed: () {
-                  if (_concoursFormKey.currentState!.validate() && _selectedDate != null) {
-                    _saveConcours(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Veuillez remplir tous les champs')));
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NouveauCours()),
+                  );
                 },
-                child: Text("Envoyer"),
+              ),
+              IconButton(
+                icon: const Icon(Icons.music_note),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NouvelleSoiree()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.star),
+                onPressed: () {
+                  // Emploi du temps
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChevalPage()),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.person),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
+                },
               ),
             ],
           ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _concoursFormKey,
+              child: ListView(
+                children: [
+                  // Titre du formulaire
+                  Center(
+                    child: Text(
+                      "Création du Concours",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Nom du Concours
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Nom du Concours',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) => _nomConcours = value,
+                        validator: (value) =>
+                        value!.isEmpty ? 'Le nom du concours est requis' : null,
+                      ),
+                    ),
+                  ),
+
+                  // Adresse
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Adresse',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) => _adresseConcours = value,
+                        validator: (value) =>
+                        value!.isEmpty ? 'L\'adresse est requise' : null,
+                      ),
+                    ),
+                  ),
+
+                  // Sélection de la date
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        onPressed: () => _selectDate(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          _selectedDate == null
+                              ? 'Sélectionner une date'
+                              : 'Date sélectionnée: ${_selectedDate!.toLocal()}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Sélection du niveau
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: DropdownButtonFormField<String>(
+                        value: _selectedNiveau,
+                        items: niveaux
+                            .map((niveau) => DropdownMenuItem(
+                            value: niveau, child: Text(niveau)))
+                            .toList(),
+                        onChanged: (value) =>
+                            setState(() => _selectedNiveau = value),
+                        decoration: InputDecoration(
+                          labelText: 'Sélectionner le niveau',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) =>
+                        value == null ? 'Le niveau est requis' : null,
+                      ),
+                    ),
+                  ),
+
+                  // Nom du Participant
+                  Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Nom du Participant',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) => _participant = value,
+                      ),
+                    ),
+                  ),
+
+                  // Bouton d'ajout de participant
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_participant != null && _participant!.isNotEmpty) {
+                        setState(() {
+                          participants.add(_participant!);
+                          _participant = '';
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text('Ajouter Participant'),
+                  ),
+
+                  // Liste des participants
+                  const SizedBox(height: 10),
+                  ...participants.map((participant) {
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        title: Text(participant),
+                      ),
+                    );
+                  }).toList(),
+
+                  // Bouton d'envoi
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_concoursFormKey.currentState!.validate() &&
+                          _selectedDate != null) {
+                        _saveConcours(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Veuillez remplir tous les champs'),
+                        ));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text(
+                      "Envoyer",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
+
 }

@@ -24,7 +24,6 @@ class _NouveauCoursState extends State<NouveauCours> {
   TimeOfDay? _selectedTime;
   String? _selectedSpecialiteId = "1";
   List<Specialite> specialites = [];
-  
 
 
   @override
@@ -47,7 +46,8 @@ class _NouveauCoursState extends State<NouveauCours> {
     }
 
     final cours = Cours(
-      terrain: _selectedTerrain == "Carriere" ? Terrain.carriere : Terrain.manege,
+      terrain: _selectedTerrain == "Carriere" ? Terrain.carriere : Terrain
+          .manege,
       date: _selectedDate!,
       duree: _selectedTime!.hour * 60 + _selectedTime!.minute,
       specialiteId: int.parse(_selectedSpecialiteId!),
@@ -69,28 +69,29 @@ class _NouveauCoursState extends State<NouveauCours> {
     }
   }
 
-Future<void> _selectTime(BuildContext context) async {
-  final TimeOfDay? pickedTime = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.now(), 
-    initialEntryMode: TimePickerEntryMode.input,
-    builder: (BuildContext context, Widget? child) {
-      return MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
-      );
-    }
-  );
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        initialEntryMode: TimePickerEntryMode.input,
+        builder: (BuildContext context, Widget? child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          );
+        }
+    );
 
-  if (pickedTime != null && pickedTime != _selectedTime) {
-    setState(() {
-      _selectedTime = pickedTime;
-    });
+    if (pickedTime != null && pickedTime != _selectedTime) {
+      setState(() {
+        _selectedTime = pickedTime;
+      });
+    }
   }
-}
 
   String _formatDate(DateTime date) {
-    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day
+        .toString().padLeft(2, '0')}";
   }
 
   @override
@@ -98,7 +99,7 @@ Future<void> _selectTime(BuildContext context) async {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Accueil"),
+          title: const Text("Cours"),
           foregroundColor: Colors.white, // Titre en blanc
           backgroundColor: Colors.blueAccent,
           actions: [
@@ -111,122 +112,199 @@ Future<void> _selectTime(BuildContext context) async {
                 );
               },
             ),
-
             IconButton(
               icon: const Icon(Icons.book),
               onPressed: () {
-                // Naviguer vers la page de profil (pour l'instant RegisterPage
+                // Naviguer vers la page de profil (pour l'instant RegisterPage)
               },
             ),
-
             IconButton(
               icon: const Icon(Icons.music_note),
               onPressed: () {
-                // Naviguer vers la page de profil (pour l'instant RegisterPage)
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NouvelleSoiree()),
                 );
               },
             ),
-
-           IconButton(
-            icon: const Icon(Icons.star),
-            onPressed: () {
-              // Naviguer vers la page emploi du temps
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NouveauConcours()),
-              );
-            },
-          ),
-
+            IconButton(
+              icon: const Icon(Icons.star),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NouveauConcours()),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChevalPage()),  // Utilisez ChevalPage() pour naviguer
+                  MaterialPageRoute(builder: (context) =>
+                      ChevalPage()), // Utilisez ChevalPage() pour naviguer
                 );
               },
             ),
             IconButton(
               icon: const Icon(Icons.person),
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfilePage()),
                 );
-                // Naviguer vers la page de profil (pour l'instant RegisterPage)
-
               },
             ),
           ],
         ),
-        body: Center(
-          child: Column(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
             children: [
-              Text("Nouveau Cours"),
+              // Titre
+              const Text(
+                "Nouveau Cours",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+
+              // Formulaire de création de cours
               Form(
                 key: _coursformKey,
                 child: Column(
                   children: [
-                    // Selection du terrain
-                    DropdownButtonFormField(
-                      value: terrains[0],
-                      items: terrains.map((String value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        _selectedTerrain = value;
-                      },
-                    ),
-                    // Bouton de selection de date
-                    ElevatedButton(
-                      onPressed: () => {_selectDate(context)},
-                      child: Text(_selectedDate == null
-                          ? 'Sélectionner une date'
-                          : 'Date sélectionnée: ${_formatDate(_selectedDate!)}'),
-                    ),
-                    // Bouton de selection de l'heure
-                    ElevatedButton(
-                      onPressed: () => {_selectTime(context)},
-                      child: Text(_selectedTime == null ? 'Selectionner une heure' : 'Heure sélectionnée: ${_selectedTime?.format(context)}'),
-                    ),
-                    // Selection de la specialite
-                    DropdownButtonFormField<Specialite>(
-                      value: specialites.isNotEmpty ? specialites[0] : null,
-                      items: specialites.map((Specialite specialite) {
-                        return DropdownMenuItem<Specialite>(
-                          value: specialite,
-                          child: Text(specialite.nom),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        _selectedSpecialiteId = value?.id.toString();
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Sélectionner une spécialité',
+                    // Sélection du terrain
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: DropdownButtonFormField<String>(
+                        value: terrains[0],
+                        items: terrains.map((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          _selectedTerrain = value;
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Sélectionner un terrain',
+                          labelStyle: TextStyle(color: Colors.blueAccent),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.blueAccent),
+                          ),
+                        ),
                       ),
                     ),
-                    // Bouton d'envoie
+
+                    // Sélection de la date
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: ElevatedButton(
+                        onPressed: () => {_selectDate(context)},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          _selectedDate == null
+                              ? 'Sélectionner une date'
+                              : 'Date sélectionnée: ${_formatDate(
+                              _selectedDate!)}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+
+                    // Sélection de l'heure
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: ElevatedButton(
+                        onPressed: () => {_selectTime(context)},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          _selectedTime == null
+                              ? 'Sélectionner une heure'
+                              : 'Heure sélectionnée: ${_selectedTime?.format(
+                              context)}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+
+                    // Sélection de la spécialité
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: DropdownButtonFormField<Specialite>(
+                        value: specialites.isNotEmpty ? specialites[0] : null,
+                        items: specialites.map((Specialite specialite) {
+                          return DropdownMenuItem<Specialite>(
+                            value: specialite,
+                            child: Text(specialite.nom),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          _selectedSpecialiteId = value?.id.toString();
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Sélectionner une spécialité',
+                          labelStyle: TextStyle(color: Colors.blueAccent),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.blueAccent),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Bouton d'envoi
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: ElevatedButton(
-                          onPressed: () {
-                            if (_coursformKey.currentState!.validate() && _selectedDate != null && _selectedTime != null) {
-                              _saveCours();
-                            }
-                          },
-                          child: const Text("Envoyer")),
-                    )
+                        onPressed: () {
+                          if (_coursformKey.currentState!.validate() &&
+                              _selectedDate != null &&
+                              _selectedTime != null) {
+                            _saveCours();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Envoyer",
+                          style: TextStyle(fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -77,9 +77,6 @@ Future<void> initDb() async {
       await db.execute(
            'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
       );
-      await db.execute(
-           'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
-      );
 
     },
   );

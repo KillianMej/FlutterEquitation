@@ -33,7 +33,7 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
   // Chargement des themes
   Future<void> _loadThemes() async {
     themes = await db_theme.getThemes();
-    if(themes.isNotEmpty){
+    if (themes.isNotEmpty) {
       _selectedThemeId = 1;
     }
     setState(() {});
@@ -61,15 +61,16 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
 
   Future<void> _saveSoiree() async {
     final soiree = Soiree(
-      themeId: _selectedThemeId ?? 1,
-      date: _selectedDate!
+        themeId: _selectedThemeId ?? 1,
+        date: _selectedDate!
     );
 
     await insertSoiree(soiree);
   }
 
   String _formatDate(DateTime date) {
-    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day
+        .toString().padLeft(2, '0')}";
   }
 
   @override
@@ -89,29 +90,24 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
               );
             },
           ),
-
           IconButton(
             icon: const Icon(Icons.book),
             onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NouveauCours()),
               );
             },
           ),
-
           IconButton(
             icon: const Icon(Icons.music_note),
             onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
             },
           ),
-
           IconButton(
             icon: const Icon(Icons.star),
             onPressed: () {
-              // Naviguer vers la page emploi du temps
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NouveauConcours()),
@@ -130,13 +126,10 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfilePage()),
               );
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
-
             },
           ),
         ],
@@ -146,9 +139,23 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
         child: ListView.builder(
           itemCount: soirees.length,
           itemBuilder: (context, i) {
-            return ListTile(
-              title: Text('Soirée ${themes[soirees[i].themeId - 1].nom}'),
-              subtitle: Text('Date: ${_formatDate(soirees[i].date)}'),
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              elevation: 5,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(12),
+                title: Text(
+                  'Soirée ${themes[soirees[i].themeId - 1].nom}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('Date: ${_formatDate(soirees[i].date)}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.info_outline),
+                  onPressed: () {
+                    // Action pour afficher plus d'infos
+                  },
+                ),
+              ),
             );
           },
         ),
@@ -158,61 +165,72 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
           _loadThemes();
           showDialog<String>(
             context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text('Créer une nouvelle soirée'),
-              content: Form(
-                key: _soireeKey,
-                child: Column(
-                  children: [
-                    if (themes.isNotEmpty)
-                      // Selection du themes
-                      DropdownButtonFormField(
-                        value: themes[0],
-                        items: themes.map((db_theme.Theme theme) {
-                          return DropdownMenuItem(
-                            value: theme,
-                            child: Text(theme.nom),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          _selectedThemeId = value?.id;
-                        },
-                        validator: (value) => value == null ? 'Veuillez sélectionner un thème' : null
-                      )
-                    else
-                      Text('Aucun thème disponible'),
-                    // Selection de la date
-                    ElevatedButton(
-                      onPressed: () => {_selectDate(context)},
-                      child: Text(_selectedDate == null
-                          ? 'Sélectionner une date'
-                          : 'Date sélectionnée: ${_formatDate(_selectedDate!)}'),
+            builder: (BuildContext context) =>
+                AlertDialog(
+                  title: const Text('Créer une nouvelle soirée'),
+                  content: Form(
+                    key: _soireeKey,
+                    child: Column(
+                      children: [
+                        if (themes.isNotEmpty)
+                        // Selection du themes
+                          DropdownButtonFormField(
+                            value: themes[0],
+                            items: themes.map((db_theme.Theme theme) {
+                              return DropdownMenuItem(
+                                value: theme,
+                                child: Text(theme.nom),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              _selectedThemeId = value?.id;
+                            },
+                            validator: (value) =>
+                            value == null
+                                ? 'Veuillez sélectionner un thème'
+                                : null,
+                          )
+                        else
+                          const Text('Aucun thème disponible'),
+                        const SizedBox(height: 16),
+                        // Selection de la date
+                        ElevatedButton(
+                          onPressed: () => {_selectDate(context)},
+                          child: Text(
+                              _selectedDate == null
+                                  ? 'Sélectionner une date'
+                                  : 'Date sélectionnée: ${_formatDate(
+                                  _selectedDate!)}'),
+                        ),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_soireeKey.currentState!.validate() &&
+                                  _selectedThemeId != null) {
+                                _saveSoiree();
+                                _loadSoiree();
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: const Text("Envoyer"),
+                          ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if (_soireeKey.currentState!.validate() && _selectedThemeId != null) {
-                            _saveSoiree();
-                            _loadSoiree();
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: const Text("Envoyer")),
-                    )
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Annuler'),
+                    ),
                   ],
                 ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Text('Cancel'),
-                ),
-              ],
-            ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
