@@ -5,6 +5,7 @@ import 'nouveau_Cours.dart';
 import 'nouvelle_soiree.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../database/cheval.dart'; // Assurez-vous que ce fichier contient la définition de 'Cheval'
+import 'Profile.dart';
 
 
 class ChevalPage extends StatefulWidget {
@@ -139,7 +140,7 @@ class _ChevalPageState extends State<ChevalPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Accueil"),
+        title: const Text("Mes chevaux"),
         foregroundColor: Colors.white, // Titre en blanc
         backgroundColor: Colors.blueAccent,
         actions: [
@@ -182,17 +183,16 @@ class _ChevalPageState extends State<ChevalPage> with SingleTickerProviderStateM
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChevalPage()),
-              );
+
             },
           ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              // Naviguer vers la page de profil (pour l'instant RegisterPage)
-            },
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );            },
           ),
         ],
       ),

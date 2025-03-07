@@ -3,11 +3,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../database/utilisateur.dart';
 import 'Profile.dart';
-import 'register.dart'; // Import de la page d'inscription
+import 'register.dart'; 
+import '../pages/forgot_password_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:convert';
-import '../database/utilisateur.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,39 +29,40 @@ class _LoginPageState extends State<LoginPage> {
     _database = await openDatabase(
       join(await getDatabasesPath(), 'database.db'),
       version: 1,
+      onCreate: (db, version) {
+        db.execute('''
+          CREATE TABLE IF NOT EXISTS utilisateur (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            email TEXT UNIQUE,
+            mot_de_passe TEXT,
+            numero TEXT,
+            age INTEGER,
+            ffe TEXT
+          )
+        ''');
+      },
     );
   }
 
-  Future<bool> _checkLogin(String username, String password) async {
-    if (_database == null) return false;
-
-    final List<Map<String, dynamic>> utilisateurs = await _database!.query(
-      'utilisateur',
-      where: "email = ? AND mot_de_passe = ?",
-      whereArgs: [username, password], // Comparaison sans hachage
-    );
-
-    return utilisateurs.isNotEmpty;
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
-  Future<void> _saveUserInfo(Map<String, dynamic> userData) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("id", userData["id"]);
-    await prefs.setString("username", userData["username"] ?? ""); // Si null, stocke ""
-    await prefs.setString("email", userData["email"] ?? ""); // Si null, stocke ""
-    await prefs.setString("numero", userData["numero"] ?? ""); // Si null, stocke ""
-    await prefs.setInt("age", userData["age"] ?? 0); // Si null, stocke 0
-    await prefs.setString("ffe", userData["ffe"] ?? ""); // Si null, stocke ""
-  }
-
-
-// Méthode de connexion mise à jour
-  void _login(BuildContext context) async {
+  Future<void> _login(BuildContext context) async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
       _showMessage(context, "Veuillez entrer un nom d'utilisateur et un mot de passe");
+      return;
+    }
+
+    if (_database == null) {
+      _showMessage(context, "Erreur : Base de données non initialisée");
       return;
     }
 
@@ -74,9 +73,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (utilisateurs.isNotEmpty) {
-      // Enregistrer les infos utilisateur
       await _saveUserInfo(utilisateurs.first);
-      // Aller à la page d'accueil
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -86,10 +83,20 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _saveUserInfo(Map<String, dynamic> userData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("id", userData["id"]);
+    await prefs.setString("username", userData["username"] ?? "");
+    await prefs.setString("email", userData["email"] ?? "");
+    await prefs.setString("numero", userData["numero"] ?? "");
+    await prefs.setInt("age", userData["age"] ?? 0);
+    await prefs.setString("ffe", userData["ffe"] ?? "");
+  }
 
   void _showMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-  }
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +120,10 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text("Connexion", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.blueAccent)),
+                    const Text(
+                      "Connexion",
+                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: _usernameController,
@@ -124,14 +134,6 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: _inputDecoration("Mot de passe", Icons.lock),
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {}, // Ajoutez la logique de mot de passe oublié ici
-                        child: const Text("Mot de passe oublié ?", style: TextStyle(color: Colors.blue)),
-                      ),
                     ),
                     const SizedBox(height: 15),
                     SizedBox(
@@ -159,6 +161,19 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPasswordPage()), // Correction ici
+                        );
+                      },
+                      child: const Text(
+                        "Mot de passe oublié ?",
+                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
