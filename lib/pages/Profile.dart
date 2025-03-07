@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/cheval.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginPage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'nouveau_cours.dart';
+import 'nouvelle_soiree.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -56,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       print("id : $id");
 
-        
+
       _phoneController.text = numero;
       _ageController.text = age;
       _ffeController.text = ffeProfile;
@@ -122,6 +125,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,12 +146,45 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             },
           ),
+
+          IconButton(
+            icon: const Icon(Icons.book),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauCours()),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.music_note),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouvelleSoiree()),
+              );
+            },
+          ),
+
           IconButton(
             icon: const Icon(Icons.schedule),
             onPressed: () {
               // Naviguer vers la page emploi du temps
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Emploi du temps")),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChevalPage()),
               );
             },
           ),

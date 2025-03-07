@@ -33,7 +33,7 @@ class Cheval {
       "age": age,
       "robe": robe,
       "race": race,
-      "sexe": sexe,
+      "sexe": sexe.toString().split('.').last, // Stocker "M" ou "F"
       "specialite_id": specialiteId,
       "utilisateur_id": utilisateurId,
     };
@@ -79,8 +79,61 @@ Future<Cheval?> getChevalById(int id) async{
     age: maps.first['age'],
     robe: maps.first['robe'],
     race: maps.first['race'],
-    sexe: maps.first['sexe'] == 'M' ? Sexe.M : Sexe.F,
+    sexe: Sexe.values.firstWhere((e) => e.toString().split('.').last == maps.first['sexe']),
     specialiteId: maps.first['specialite_id'],
     utilisateurId: maps.first['utilisateur_id'],
+  );
+}
+
+Future<List<Cheval>> getChevauxByUtilisateur(int utilisateurId) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  final List<Map<String, dynamic>> maps = await database.query(
+    'cheval',
+    where: 'utilisateur_id = ?',
+    whereArgs: [utilisateurId],
+  );
+
+  return List.generate(maps.length, (i) {
+    return Cheval(
+      id: maps[i]['id'],
+      photo: maps[i]['photo'],
+      nom: maps[i]['nom'],
+      age: maps[i]['age'],
+      robe: maps[i]['robe'],
+      race: maps[i]['race'],
+      sexe: Sexe.values.firstWhere((e) => e.toString().split('.').last == maps[i]['sexe']),
+      specialiteId: maps[i]['specialite_id'],
+      utilisateurId: maps[i]['utilisateur_id'],
+    );
+  });
+}
+
+Future<void> updateCheval(Cheval cheval) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+  print("Cheval modifié en bdd : $cheval");
+
+  await database.update(
+    'cheval',
+    cheval.toMap(),
+    where: 'id = ?',
+    whereArgs: [cheval.id],
+  );
+}
+
+
+Future<void> deleteCheval(int id) async {
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'database.db'),
+  );
+
+  await database.delete(
+    'cheval',
+    where: 'id = ?',
+    whereArgs: [id],
   );
 }

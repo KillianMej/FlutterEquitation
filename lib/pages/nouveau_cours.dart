@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'Profile.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../database/specialite.dart';
 import '../database/cours.dart';
+import 'nouvelle_soiree.dart';
+import 'home.dart';
+import 'cheval.dart';
 
 class NouveauCours extends StatefulWidget {
   @override
@@ -92,6 +96,72 @@ Future<void> _selectTime(BuildContext context) async {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Accueil"),
+          foregroundColor: Colors.white, // Titre en blanc
+          backgroundColor: Colors.blueAccent,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+
+            IconButton(
+              icon: const Icon(Icons.book),
+              onPressed: () {
+                // Naviguer vers la page de profil (pour l'instant RegisterPage
+              },
+            ),
+
+            IconButton(
+              icon: const Icon(Icons.music_note),
+              onPressed: () {
+                // Naviguer vers la page de profil (pour l'instant RegisterPage)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NouvelleSoiree()),
+                );
+              },
+            ),
+
+            IconButton(
+              icon: const Icon(Icons.schedule),
+              onPressed: () {
+                // Naviguer vers la page emploi du temps
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Emploi du temps")),
+                );
+              },
+            ),
+
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChevalPage()),  // Utilisez ChevalPage() pour naviguer
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+                // Naviguer vers la page de profil (pour l'instant RegisterPage)
+
+              },
+            ),
+          ],
+        ),
         body: Center(
           child: Column(
             children: [

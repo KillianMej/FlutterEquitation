@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'cheval.dart';
 import '../database/theme.dart' as db_theme;
 import '../database/soiree.dart';
+import 'home.dart';
+import 'nouveau_cours.dart';
+import 'Profile.dart';
 
 class NouvelleSoiree extends StatefulWidget {
   @override
@@ -72,7 +75,70 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Nouvelle Soirée"),
+        title: const Text("Soirée"),
+        foregroundColor: Colors.white, // Titre en blanc
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.book),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauCours()),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.music_note),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            onPressed: () {
+              // Naviguer vers la page emploi du temps
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Emploi du temps")),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChevalPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

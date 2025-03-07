@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'nouvelle_soiree.dart';
 import 'register.dart'; // Importer la page de profil qui est pour l'instant RegisterPage
 import 'Profile.dart';
 import 'nouveau_Cours.dart'; // Importer la page d'emploi du temps si elle existe
+import 'cheval.dart';
+import 'Profile.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -16,9 +19,31 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-
             },
           ),
+
+          IconButton(
+            icon: const Icon(Icons.book),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauCours()),
+              );
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.music_note),
+            onPressed: () {
+              // Naviguer vers la page de profil (pour l'instant RegisterPage)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouvelleSoiree()),
+              );
+            },
+          ),
+
           IconButton(
             icon: const Icon(Icons.schedule),
             onPressed: () {
@@ -28,6 +53,18 @@ class HomePage extends StatelessWidget {
               );
             },
           ),
+
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChevalPage()),
+              );
+            },
+          ),
+
+
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
