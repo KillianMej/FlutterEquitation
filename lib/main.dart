@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/pages/loginpage.dart';
 import 'package:flutter_app/database/concours.dart';
+import 'package:flutter_app/pages/activitepage.dart';
+import 'package:flutter_app/database/activite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -9,10 +10,12 @@ import 'database/utilisateur.dart';
 import 'pages/register.dart';
 import 'pages/nouveau_Cours.dart';
 import 'pages/nouvelle_soiree.dart';
-
 import 'pages/home.dart';
-import 'pages/nouveau_Cours.dart'; // Assurez-vous d'importer la page NouveauConcours
-import 'pages/concours.dart'; // Si vous en avez besoin également
+import 'pages/nouveau_concours.dart';
+import 'pages/activitepage.dart';
+
+// 🔹 Déclaration d'une variable globale pour la base de données
+Database? _database;
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -21,8 +24,9 @@ Future<void> initDb() async {
   final dbPath = join(await getDatabasesPath(), 'database.db');
   print("📂 La base de données sera créée à : $dbPath");
 
-  final database = await openDatabase(
-    join(await getDatabasesPath(), 'database.db'),
+  // Initialisation ou ouverture de la base de données
+  _database = await openDatabase(
+    dbPath,
     onCreate: (db, version) async {
       await db.execute(
         'CREATE TABLE utilisateur(id INTEGER PRIMARY KEY AUTOINCREMENT, nom VARCHAR(100) NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, mot_de_passe VARCHAR(255) NOT NULL, numero VARCHAR(20), age INT, ffe VARCHAR(255),photo VARCHAR(255), gerant BOOLEAN)',
@@ -54,13 +58,20 @@ Future<void> initDb() async {
       await db.execute(
           'CREATE TABLE dp (id INTEGER PRIMARY KEY AUTOINCREMENT,cheval_id INT,utilisateur_id INT);'
       );
+      await db.execute(
+           'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
+      );
+      await db.execute(
+           'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
+      );
+
     },
     version: 1,
   );
   print("🚀 Base de données prête !");
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDb();
 
@@ -80,11 +91,14 @@ class _MainAppState extends State<MainApp> {
   Future<String>? _futureUsers;
 
   @override
-  void initState() {
-    super.initState();
-    _insertInitialUser();
-    _futureUsers = _getUsers(11);
-  }
+@override
+void initState() {
+  super.initState();
+  // Appel à la fonction pour tester l'ajout et la récupération des activités
+  _testerAjoutEtRecuperation();
+  _futureUsers = _getUsers(11);
+}
+
 
   Future<void> _insertInitialUser() async {
     final jaque = Utilisateur(
@@ -111,30 +125,47 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return LoginPage(); // Redirection immédiate vers HomePage
-  }
-}
-
-// Page d'accueil avec bouton de navigation vers NouveauConcours
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Page d\'accueil'),
+        title: Text('Page d\'Accueil'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Naviguer vers la page NouveauConcours
+            // Naviguer vers la page ActivitePage (Flux d'Actualité)
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => NouveauConcours()),
             );
           },
-          child: Text('Créer un Concours'),
+          child: Text("Voir les Activités"),
         ),
       ),
     );
   }
 }
+
+Future<void> _testerAjoutEtRecuperation() async {
+  // 1️⃣ Ajouter une activité
+  await ajouterActivite(
+    Activite(
+      titre: "Test Concours",
+      description: "Ceci est un test d'ajout d'activité.",
+      date: DateTime.now(),
+      type: "Concours",
+    ),
+  );
+
+  print("✅ Activité ajoutée avec succès !");
+
+  // 2️⃣ Récupérer les activités pour vérifier
+  List<Activite> activites = await getFluxActualite();
+
+  print("📋 Liste des activités récupérées :");
+  for (var activite in activites) {
+    print(
+        "🔹 ${activite.titre} - ${activite.description} - ${activite.date} - ${activite.type}");
+  }
+}
+
+
