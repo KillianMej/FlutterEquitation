@@ -8,6 +8,10 @@ import 'pages/register.dart';
 import 'pages/nouveau_Cours.dart';
 import 'pages/nouvelle_soiree.dart';
 import 'pages/home.dart';
+import 'pages/nouveau_concours.dart';
+
+// 🔹 Déclaration d'une variable globale pour la base de données
+Database? _database;
 
 Future<void> initDb() async {
   sqfliteFfiInit();
@@ -70,12 +74,19 @@ Future<void> initDb() async {
       await db.execute(
         'CREATE TABLE dp (id INTEGER PRIMARY KEY AUTOINCREMENT, cheval_id INT, utilisateur_id INT)',
       );
+      await db.execute(
+           'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
+      );
+      await db.execute(
+           'CREATE TABLE activite (id INTEGER PRIMARY KEY AUTOINCREMENT, titre TEXT, description TEXT, date DATETIME, type TEXT)'
+      );
+
     },
   );
   print("🚀 Base de données prête !");
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDb();
 
@@ -96,12 +107,13 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   Future<String>? _futureUsers;
 
-  @override
-  void initState() {
-    super.initState();
-    _insertInitialUser();
-    _futureUsers = _getUsers(11);
-  }
+@override
+void initState() {
+  super.initState();
+  // Appel à la fonction pour tester l'ajout et la récupération des activités
+  _futureUsers = _getUsers(11);
+}
+
 
   Future<void> _insertInitialUser() async {
     final jaque = Utilisateur(

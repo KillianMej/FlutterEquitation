@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'nouveau_concours.dart';
 import 'home.dart';
 import 'nouveau_Cours.dart';
 import 'nouvelle_soiree.dart';
@@ -170,10 +171,11 @@ class _ChevalPageState extends State<ChevalPage> with SingleTickerProviderStateM
             },
           ),
           IconButton(
-            icon: const Icon(Icons.schedule),
+            icon: const Icon(Icons.star),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Emploi du temps")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
               );
             },
           ),

@@ -6,6 +6,8 @@ import 'Profile.dart';
 import 'register.dart'; // Import de la page d'inscription
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:convert';
+import '../database/utilisateur.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -136,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () => _login(context),
-                        child: const Text("Se connecter", style: TextStyle(fontSize: 18, color: Colors.white)),
+                        child: const Text("Se connecter", style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 5, 5, 5))),
                       ),
                     ),
                     const SizedBox(height: 10),

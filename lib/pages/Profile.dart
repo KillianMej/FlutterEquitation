@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'nouveau_concours.dart';
 import 'package:flutter_app/pages/cheval.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
-        title: const Text("Accueil"),
+        title: const Text("Profil"),
         foregroundColor: Colors.white, // Titre en blanc
         backgroundColor: Colors.blueAccent,
         actions: [
@@ -170,11 +171,12 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           IconButton(
-            icon: const Icon(Icons.schedule),
+            icon: const Icon(Icons.star),
             onPressed: () {
               // Naviguer vers la page emploi du temps
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Emploi du temps")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
               );
             },
           ),

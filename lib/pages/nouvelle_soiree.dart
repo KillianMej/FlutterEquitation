@@ -9,6 +9,7 @@ import '../database/soiree.dart';
 import 'home.dart';
 import 'nouveau_cours.dart';
 import 'Profile.dart';
+import 'nouveau_concours.dart';
 
 class NouvelleSoiree extends StatefulWidget {
   @override
@@ -108,15 +109,15 @@ class _NouvelleSoireeState extends State<NouvelleSoiree> {
           ),
 
           IconButton(
-            icon: const Icon(Icons.schedule),
+            icon: const Icon(Icons.star),
             onPressed: () {
               // Naviguer vers la page emploi du temps
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Emploi du temps")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
               );
             },
           ),
-
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {

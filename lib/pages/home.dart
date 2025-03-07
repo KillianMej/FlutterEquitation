@@ -5,6 +5,7 @@ import 'Profile.dart';
 import 'nouveau_Cours.dart'; // Importer la page d'emploi du temps si elle existe
 import 'cheval.dart';
 import 'Profile.dart';
+import 'nouveau_concours.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -45,11 +46,12 @@ class HomePage extends StatelessWidget {
           ),
 
           IconButton(
-            icon: const Icon(Icons.schedule),
+            icon: const Icon(Icons.star),
             onPressed: () {
               // Naviguer vers la page emploi du temps
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Emploi du temps")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
               );
             },
           ),
