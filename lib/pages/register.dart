@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:path/path.dart';
 import 'home.dart';
 import 'LoginPage.dart';
-
 import '../database/utilisateur.dart'; // Assurez-vous que le chemin est correct
 
 class RegisterPage extends StatefulWidget {
@@ -20,19 +17,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
-
-  // Fonction pour sélectionner une photo
-  Future<void> _pickImage() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,35 +25,6 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Section photo de profil
-              Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.blueAccent,
-                      backgroundImage: _image != null ? FileImage(_image!) : null,
-                      child: _image == null
-                          ? Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 40,
-                      )
-                          : null,
-                    ),
-                    Positioned(
-                      bottom: -10,
-                      right: -10,
-                      child: IconButton(
-                        icon: Icon(Icons.camera_alt, color: Colors.blueAccent),
-                        onPressed: _pickImage,
-                        iconSize: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 30),
 
               // Formulaire d'inscription
@@ -115,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               numero: '',
                               age: 0,
                               ffe: '',
-                              photo: _image != null ? basename(_image!.path) : '',
+                              photo: '',
                               gerant: false,
                             );
 

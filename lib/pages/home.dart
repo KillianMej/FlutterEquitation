@@ -8,6 +8,7 @@ import 'cheval.dart';
 import 'Profile.dart';
 import 'nouveau_concours.dart';  // Importer la page Nouveau Concours
 import 'flux_activite.dart';     // Importer la page Flux Activité
+import 'nouveau_concours.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -69,11 +70,12 @@ class HomePage extends StatelessWidget {
           ),
 
           IconButton(
-            icon: const Icon(Icons.schedule),
+            icon: const Icon(Icons.star),
             onPressed: () {
-              // Afficher un message pour l'emploi du temps
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Emploi du temps")),
+              // Naviguer vers la page emploi du temps
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
               );
             },
           ),

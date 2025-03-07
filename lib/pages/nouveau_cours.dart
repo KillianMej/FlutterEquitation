@@ -9,6 +9,7 @@ import '../database/cours.dart';
 import 'nouvelle_soiree.dart';
 import 'home.dart';
 import 'cheval.dart';
+import 'nouveau_concours.dart';
 
 class NouveauCours extends StatefulWidget {
   @override
@@ -129,15 +130,16 @@ Future<void> _selectTime(BuildContext context) async {
               },
             ),
 
-            IconButton(
-              icon: const Icon(Icons.schedule),
-              onPressed: () {
-                // Naviguer vers la page emploi du temps
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Emploi du temps")),
-                );
-              },
-            ),
+           IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () {
+              // Naviguer vers la page emploi du temps
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NouveauConcours()),
+              );
+            },
+          ),
 
             IconButton(
               icon: const Icon(Icons.add),

@@ -92,7 +92,7 @@ Future<void> initDb() async {
   print("🚀 Base de données prête !");
 }
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDb();
 
@@ -114,14 +114,11 @@ class _MainAppState extends State<MainApp> {
   Future<String>? _futureUsers;
 
   @override
-@override
-void initState() {
-  super.initState();
-  // Appel à la fonction pour tester l'ajout et la récupération des activités
-  _testerAjoutEtRecuperation();
-  _futureUsers = _getUsers(11);
-}
-
+  void initState() {
+    super.initState();
+    _insertInitialUser();
+    _futureUsers = _getUsers(11);
+  }
 
   Future<void> _insertInitialUser() async {
     final jaque = Utilisateur(
